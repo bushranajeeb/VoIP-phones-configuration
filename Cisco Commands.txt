@@ -1,0 +1,99 @@
+**Commands for switch CLI**
+
+en
+conf t
+
+vlan 10
+name DATA
+vlan 20
+name VOICE
+vlan 30
+name MGT
+vlan 40
+name MISC
+vlan 50
+name NATIVE
+exit
+int fa0/1
+switchport mode trunk
+switchport trunk native vlan 50
+exit
+int range fa0/2-4
+switchport mode access
+switchport access vlan 10
+switchport voice vlan 20
+exit
+
+int range fa0/5-24
+switchport mode access
+switchport access vlan 40
+shut
+
+int range gig0/1-2
+switchport mode access
+switchport access vlan 40
+shut
+end
+
+show vlan brief
+copy running-config startup-config
+
+show vlan brv    ##to check status
+
+show if int brief  ##to verify if they are all shut down
+
+do copy
+copy r
+
+**Commands for Router**
+
+
+en
+conf t
+Router(config)#int fa0/0.10
+Router(config-subif)#encapsulation dot1Q 10
+Router(config-subif)#ip add 192.168.10.1 255.255.255.0
+Router(config-subif)#exit
+
+Router(config)#int fa0/0.20
+Router(config-subif)#encapsulation dot1Q 20
+Router(config-subif)#ip add 192.168.20.1 255.255.255.0
+Router(config-subif)#exit
+
+Router(config)#int fa0/0.50
+Router(config-subif)#encapsulation dot1Q 50 native
+Router(config-subif)#exit
+
+Router(config)#int fa0/0
+Router(config-if)#no shut
+Router(config-if)#no shutdown
+exit
+
+Router(config-if)#exit
+Router(config)#ip dhcp e
+Router(config)#ip dhcp excluded-address 192.168.10.1 192.168.10.5
+Router(config)#ip dhcp excluded-address 192.168.20.1 192.168.20.5
+Router(config)#ip dhcp pool DATA10
+Router(dhcp-config)#network 192.168.10.0 255.255.255.0
+Router(dhcp-config)#default
+% Incomplete command.
+Router(dhcp-config)#default-router 192.168.10.1
+Router(dhcp-config)#exit
+Router(config)#ip dhcp pool VOICE20
+Router(dhcp-config)#network 192.168.20.0 255.255.55.0
+192.168.20.0 / 255.255.55.0 is an invalid network.
+Router(dhcp-config)#def
+Router(dhcp-config)#default-router 192.168.20.1
+Router(dhcp-config)#option 150 ip 192.168.20.1
+Router(dhcp-config)#exit
+Router(config)#telephony-service
+Router(config-telephony)#max-dn 3
+Router(config-telephony)#max-e
+Router(config-telephony)#max-ephones 3
+Router(config-telephony)#ip sou
+Router(config-telephony)#ip source-address 192.168.20.1 port 2000
+Router(config-telephony)#
+Router(config-telephony)#ephone-dn 1
+Router(config-ephone-dn)#%LINK-3-UPDOWN: Interface ephone_dsp DN 1.1, changed state to up
+
+number 1010  //giving the ipphone a 1010 extension number
